@@ -25,7 +25,7 @@ try {
 const order = req.body;
 
 ```
-if (!order.customer?.name) {
+if (!order.customer || !order.customer.name) {
   return res.status(400).json({
     success: false,
     message: "Customer name required"
@@ -106,7 +106,10 @@ if (process.env.GOOGLE_SHEET_URL) {
       body: JSON.stringify(order)
     });
   } catch (sheetError) {
-    console.error("Google Sheets error:", sheetError);
+    console.error(
+      "Google Sheets error:",
+      sheetError
+    );
   }
 }
 
