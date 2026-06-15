@@ -24,7 +24,7 @@ app.post("/api/order", async (req, res) => {
 try {
 const order = req.body;
 
-```
+
 if (!order.customer || !order.customer.name) {
   return res.status(400).json({
     success: false,
@@ -100,17 +100,14 @@ if (process.env.GOOGLE_SHEET_URL) {
 res.json({
   success: true
 });
-```
 
 } catch (error) {
 console.error(error);
 
-```
 res.status(500).json({
   success: false,
   message: error.message
 });
-```
 
 }
 });
