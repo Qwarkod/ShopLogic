@@ -33,58 +33,42 @@ if (!order.customer || !order.customer.name) {
 }
 
 const itemsText = order.items
-  .map(
-    (item) =>
-      `• ${item.name}
-```
+  .map(function (item) {
+    return (
+      "• " + item.name +
+      "\nРозмір: " + item.size +
+      "\nКількість: " + item.quantity +
+      "\nЦіна: " + item.price + " грн"
+    );
+  })
+  .join("\n\n");
 
-Розмір: ${item.size}
-Кількість: ${item.quantity}
-Ціна: ${item.price} грн`
-)
-.join("\n\n");
+const telegramMessage =
+  "🛒 НОВЕ ЗАМОВЛЕННЯ\n\n" +
+  "📦 №" + order.number + "\n\n" +
+  "👤 ПІБ:\n" + order.customer.name + "\n\n" +
+  "📞 Телефон:\n" + order.customer.phone + "\n\n" +
+  "🚚 Доставка:\n" + order.customer.delivery + "\n\n" +
+  "━━━━━━━━━━━━━━\n\n" +
+  itemsText +
+  "\n\n━━━━━━━━━━━━━━\n\n" +
+  "💰 Сума:\n" + order.total + " грн";
 
-```
-const telegramMessage = `
-```
+const telegramUrl =
+  "https://api.telegram.org/bot" +
+  process.env.BOT_TOKEN +
+  "/sendMessage";
 
-🛒 НОВЕ ЗАМОВЛЕННЯ
-
-📦 №${order.number}
-
-👤 ПІБ:
-${order.customer.name}
-
-📞 Телефон:
-${order.customer.phone}
-
-🚚 Доставка:
-${order.customer.delivery}
-
-━━━━━━━━━━━━━━
-
-${itemsText}
-
-━━━━━━━━━━━━━━
-
-💰 Сума:
-${order.total} грн
-`;
-
-```
-const telegramResponse = await fetch(
-  `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      chat_id: process.env.CHAT_ID,
-      text: telegramMessage
-    })
-  }
-);
+const telegramResponse = await fetch(telegramUrl, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    chat_id: process.env.CHAT_ID,
+    text: telegramMessage
+  })
+});
 
 const telegramData = await telegramResponse.json();
 
@@ -134,5 +118,5 @@ res.status(500).json({
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-console.log(`Server started on port ${PORT}`);
+console.log("Server started on port " + PORT);
 });
